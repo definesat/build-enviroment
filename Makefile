@@ -63,6 +63,7 @@ BBLAYERS ?= \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-xp \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-xtrend \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-xcore \
+	$(CURDIR)/meta-oe-alliance/meta-brands/meta-clap \
 	$(CURDIR)/meta-local \
 
 
@@ -848,19 +849,55 @@ MACHINEBUILD=dinobot4kse
 else ifeq ($(MACHINEBUILD),dinobot4kplus)
 MACHINE=u52
 MACHINEBUILD=dinobot4kplus
-
+else ifeq ($(MACHINEBUILD),clap4k)
+MACHINE=cc1
+MACHINEBUILD=clap4k
 endif
 
 initialize: init
 
 init: setupmbuild $(BBLAYERS) $(CONFFILES)
 
+cam: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake -b enigma2-plugin-softcams-oscam.bb
+conf: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake kodi -c do_configure -f
+stalker: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake qtstalker
+hbbtv: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake qthbbtv
+opengl: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake clap-opengl-cc1
+libs: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake clap-libs-cc1
+ko: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake clap-dvb-modules-cc1
+jpeg: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake jpeg
+kodi: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake kodi -c do_compile -f
 image: init
 	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake $(DISTRO)-image
-
+e2: init
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake enigma2 -c do_compile
 clean:
 	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a clean \e[95mPlease wait... " && bitbake -qqq -c clean $(DISTRO)-image && echo -n -e "\e[93mClean completed.\e[0m"
-
+linux-clean:
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a linux clean \e[95mPlease wait... " && bitbake -qqq -c clean linux-clap && echo -n -e "\e[93mClean completed.\e[0m"
+branding-clean:
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a branding clean \e[95mPlease wait... " && bitbake -qqq -b oe-alliance-branding.bb -c clean && echo -n -e "\e[93mClean completed.\e[0m"
+branding-remote-clean:
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a branding clean \e[95mPlease wait... " && bitbake -qqq -b oe-alliance-branding-remote.bb -c clean && echo -n -e "\e[93mClean completed.\e[0m"
+boost-clean:
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a boost clean \e[95mPlease wait... " && bitbake -qqq -c clean boost && echo -n -e "\e[93mClean completed.\e[0m"
+e2-clean:
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a e2 clean \e[95mPlease wait... " && bitbake -qqq -c clean enigma2 && echo -n -e "\e[93mClean completed.\e[0m"
+redsea-clean:
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a e2 clean \e[95mPlease wait... " && bitbake -qqq -c clean redsea && echo -n -e "\e[93mClean completed.\e[0m"
+kodi-clean:
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a kodi clean \e[95mPlease wait... " && bitbake -qqq -c clean kodi && echo -n -e "\e[93mClean completed.\e[0m"
+jpeg-clean:
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a jpeg clean \e[95mPlease wait... " && bitbake -qqq -c clean jpeg && echo -n -e "\e[93mClean completed.\e[0m"
 update:
 	@echo 'Updating Git repositories...'
 	@HASH=`$(XSUM) $(MAKEFILE_LIST)`; \
