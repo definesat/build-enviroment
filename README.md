@@ -51,7 +51,7 @@ This sets-up the oe-alliance build environment.
 ----------
 8 - Clone oe-alliance build-environment git
 
-    git clone git://github.com/oe-alliance/build-enviroment.git -b 4.1
+    git clone git://github.com/definesat/build-enviroment.git -b 4.1
 
 ----------
 9 - Switch to folder build-enviroment
@@ -66,4 +66,4 @@ This sets-up the oe-alliance build environment.
 ----------
 11 - Finally you can start building a image
 
-    MACHINE=gbquadplus DISTRO=teamblue make image
+    MACHINE=clap4k DISTRO=openatv DISTRO_TYPE=release make image
